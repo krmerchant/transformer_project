@@ -96,6 +96,7 @@ def main():
     # Initialize trainer
     trainer = DeTRTrainer(
         model=model,
+        criterion=criterion,
         train_dataloader=train_dataloader,
         val_dataloader=val_dataloader,
         num_classes=num_classes,

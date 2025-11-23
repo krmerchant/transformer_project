@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 class DeTRTrainer:
     def __init__(self,
                  model,
+                 criterion,
                  train_dataloader,
                  val_dataloader=None,
                  normalization_factors=None,
@@ -32,6 +33,7 @@ class DeTRTrainer:
                          for p in model.parameters() if p.requires_grad)
         logger.info(f"Number of trainable parameters: {num_params}")
         self.model = model
+        self.criterion = criterion
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
         self.device = torch.device(
@@ -41,15 +43,15 @@ class DeTRTrainer:
         self.model = self.model.to(self.device)
 
         # Initialize matcher and loss function
-        self.matcher = HungarianMatcher(cost_class=1, cost_bbox=1, cost_giou=1)
-        weight_dict = {'loss_ce': 1, 'loss_bbox': 1}
-        weight_dict['loss_giou'] = 1
-        self.criterion = SetCriterion(
-            num_classes=num_classes,
-            matcher=self.matcher,
-            losses=['labels', 'boxes', 'cardinality'],
-            eos_coef=0.1,
-            weight_dict=weight_dict)       # Initialize optimizer
+    #    self.matcher = HungarianMatcher(cost_class=1, cost_bbox=1, cost_giou=1)
+    #    weight_dict = {'loss_ce': 1, 'loss_bbox': 1}
+    #    weight_dict['loss_giou'] = 1
+    #    self.criterion = SetCriterion(
+    #        num_classes=num_classes,
+    #        matcher=self.matcher,
+    #        losses=['labels', 'boxes', 'cardinality'],
+    #        eos_coef=0.1,
+    #        weight_dict=weight_dict)       # Initialize optimizer
         self.optimizer = optim.AdamW(
             self.model.parameters(),
             lr=learning_rate,
